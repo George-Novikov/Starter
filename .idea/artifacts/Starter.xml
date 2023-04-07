@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="Starter">
+    <output-path>$PROJECT_DIR$/out/artifacts/Starter</output-path>
+    <root id="archive" name="Starter.war">
+      <element id="artifact" artifact-name="Gradle : com.valtime : Starter-1.0-SNAPSHOT.war (exploded)" />
+    </root>
+  </artifact>
+</component>

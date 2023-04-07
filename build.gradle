@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group 'com.valtime'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    junitVersion = '5.9.1'
+}
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+def props = new Properties();
+file("src/main/resources/database.properties").withInputStream{
+    props.load(it)
+}
+
+sourceSets{
+    main{
+        resources{
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
+
+dependencies {
+    compileOnly('jakarta.servlet:jakarta.servlet-api:5.0.0')
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    compileOnly("javax.servlet:jstl:1.2")
+    providedCompile("javax.servlet.jsp.jstl:jstl-api:1.2")
+    providedCompile("javax.servlet.jsp:jsp-api:2.2")
+    providedCompile("javax.servlet:javax.servlet-api:4.0.1")
+    providedCompile("org.apache.tomcat:tomcat-jsp-api:10.1.0-M16")
+    providedCompile("mysql:mysql-connector-java:8.0.32")
+}
+
+test {
+    useJUnitPlatform()
+}
