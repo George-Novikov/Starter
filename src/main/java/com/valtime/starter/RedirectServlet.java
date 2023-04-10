@@ -12,7 +12,7 @@ public class RedirectServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         ServletContext context = getServletContext();
-        RequestDispatcher dispatcher = context.getRequestDispatcher("/home");
+        RequestDispatcher dispatcher = context.getRequestDispatcher("/index.jsp");
         dispatcher.forward(request, response);
     }
 

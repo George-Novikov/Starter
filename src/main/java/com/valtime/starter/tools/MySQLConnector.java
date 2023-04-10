@@ -42,6 +42,49 @@ public class MySQLConnector {
         return users;
     }
 
+    public User selectUser(User currentUser){
+        String expression = "SELECT * FROM users WHERE username=? AND password=?";
+        String message = "";
+        User user = null;
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            try (Connection connection = getConnection(this.context)){
+                PreparedStatement statement = connection.prepareStatement(expression);
+                statement.setString(1, currentUser.getUsername());
+                statement.setString(2, currentUser.getPassword());
+                ResultSet result = statement.executeQuery();
+                while (result.next()){
+                    int id = result.getInt("ID");
+                    String uname = result.getString("username");
+                    String pwd = result.getString("password");
+                    String email = result.getString("email");
+                    user = new User(uname, pwd, email);
+                    user.setId(id);
+                }
+            }
+        } catch (Exception e){
+            message = e.getMessage();
+        }
+        return user;
+    }
+    
+    public int insertUser(User user) {
+    	String expression = "INSERT users (username, password, email) VALUES ('" + user.getUsername() + "', '" + user.getPassword() + "', '" + user.getEmail() + "' )";
+    	String message = "";
+    	int rows = 0;
+    	try {
+    		Class.forName("com.mysql.jdbc.Driver");
+    		try (Connection connection = getConnection(this.context)){
+    			Statement statement = connection.createStatement();
+    			rows = statement.executeUpdate(expression);
+    		}
+    	} catch (Exception e) {
+    		message = e.getMessage();
+    	}
+    	return rows;
+    }
+
     private static Connection getConnection(ServletContext context) throws SQLException, IOException {
         Properties properties = new Properties();
         try (InputStream inputStream = context.getResourceAsStream("WEB-INF/classes/database.properties")){

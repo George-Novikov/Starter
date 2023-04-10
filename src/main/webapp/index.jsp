@@ -6,14 +6,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>Starter</title>
     <jsp:include page="menu.html"/>
 </head>
 <body>
-<h1><%= "Hello World!" %>
-</h1>
+<h3><%= "Welcome! This is a working instance of a Tomcat application server." %></h3>
 <br/>
-<a href="hello-servlet">Hello Servlet</a>
+<p>There is a good chance that Stock Watcher service is online:</p>
+<p><a href="http://localhost:8081/StockWatcher/">StockWatcher</a></p>
+<!-- <a href="hello-servlet">Hello Servlet</a> -->
 <jsp:include page="basement.html"/>
 </body>
 </html>

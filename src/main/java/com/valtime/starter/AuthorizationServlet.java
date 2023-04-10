@@ -27,26 +27,45 @@ public class AuthorizationServlet extends HttpServlet {
         response.setContentType("text/html");
 
         ServletContext context = getServletContext();
+        HttpSession session = request.getSession();
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String email = request.getParameter("email");
+        
+        session.setAttribute("user", new User(username, password, email));
 
         PrintWriter writer = response.getWriter();
         MySQLConnector connector = null;
+        
+        User currentUser = new User(username, password, email);
+        boolean isRegistered = false;
+        String message = "";
         ArrayList<User> users = null;
 
         try {
             connector = new MySQLConnector(context);
-            writer.println("The connection to DB is successful<br>");
+            writer.println("<h3>The connection to DB is successful</h3><br>");
+            User dbUser = connector.selectUser(currentUser);
+            if (dbUser != null) {
+            	isRegistered = true;
+            } else {
+            	connector.insertUser(currentUser);
+            }
+            
             users = connector.selectAllUsers();
         } catch (Exception e){
             writer.println(e.getMessage());
         }
 
         try {
-            writer.println("<br>");
-            writer.println("Your credentials: " + username + " : " + password);
-            writer.println("<br>");
+        	if (isRegistered) {
+        		message = "Welcome back!";
+        	} else {
+        		message = "Registration successful.";
+        	}
+        	
+            writer.println("<br>" + message + " Your credentials: " + username + " : " + password + "<br><br>");
 
             for (User user : users){
                 writer.println("<li>" + user.getId() + ": "+ user.getUsername() + " - " + user.getPassword() + " - " + user.getEmail() + "</li>");
