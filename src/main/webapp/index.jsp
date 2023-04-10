@@ -12,7 +12,8 @@
 <body>
 <h3><%= "Welcome! This is a working instance of a Tomcat application server." %></h3>
 <br/>
-<p>There is a good chance that Stock Watcher service is online:</p>
+<p>There is a good chance that Stock Watcher service is now offline.</p>
+<p>But feel free contact me if you're curious to test it. Here's the link:</p>
 <p><a href="http://localhost:8081/StockWatcher/">StockWatcher</a></p>
 <!-- <a href="hello-servlet">Hello Servlet</a> -->
 <jsp:include page="basement.html"/>
