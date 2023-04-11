@@ -1,24 +1,21 @@
 package com.valtime.starter;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
 import com.valtime.starter.entities.User;
 import com.valtime.starter.tools.MySQLConnector;
+import com.valtime.starter.tools.Validator;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
-
-import java.io.*;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.nio.file.Files;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "AuthorizationServlet", value = "/AuthorizationServlet")
 public class AuthorizationServlet extends HttpServlet {
@@ -33,46 +30,50 @@ public class AuthorizationServlet extends HttpServlet {
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         
-        session.setAttribute("user", new User(username, password, email));
-
-        PrintWriter writer = response.getWriter();
-        MySQLConnector connector = null;
-        
         User currentUser = new User(username, password, email);
+        session.setAttribute("user", currentUser);
         boolean isRegistered = false;
+        boolean isEmpty = Validator.checkInput(currentUser);
         String message = "";
         ArrayList<User> users = null;
+        
+        PrintWriter writer = response.getWriter();
+        MySQLConnector connector = null;
 
         try {
             connector = new MySQLConnector(context);
             writer.println("<h3>The connection to DB is successful</h3><br>");
-            User dbUser = connector.selectUser(currentUser);
-            if (dbUser != null) {
-            	isRegistered = true;
+            
+            if (!isEmpty) {
+            	User dbUser = connector.selectUser(currentUser);
+            	if (dbUser != null) {
+                	isRegistered = true;
+                } else {
+                	connector.insertUser(currentUser);
+                }
             } else {
-            	connector.insertUser(currentUser);
+            	RequestDispatcher dispatcher = context.getRequestDispatcher("/login.jsp");
+            	message = "Please fill empty fields!";
+            	session.setAttribute("message", message);
+            	dispatcher.forward(request, response);
             }
             
             users = connector.selectAllUsers();
         } catch (Exception e){
             writer.println(e.getMessage());
         }
+        
+        if (isRegistered) {
+    		message = "Welcome back!";
+    	} else {
+    		message = "Registration successful.";
+    	}
+    	writer.println("<br>" + message + " Your credentials: " + username + " : " + password + "<br><br>");
 
-        try {
-        	if (isRegistered) {
-        		message = "Welcome back!";
-        	} else {
-        		message = "Registration successful.";
-        	}
-        	
-            writer.println("<br>" + message + " Your credentials: " + username + " : " + password + "<br><br>");
-
-            for (User user : users){
-                writer.println("<li>" + user.getId() + ": "+ user.getUsername() + " - " + user.getPassword() + " - " + user.getEmail() + "</li>");
-            }
-        } finally{
-            writer.close();
+        for (User user : users){
+            writer.println("<li>" + user.getId() + ": "+ user.getUsername() + " - " + user.getPassword() + " - " + user.getEmail() + "</li>");
         }
+        writer.close();
     }
 
     @Override

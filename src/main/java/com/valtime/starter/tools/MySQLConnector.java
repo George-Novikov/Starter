@@ -45,7 +45,7 @@ public class MySQLConnector {
     public User selectUser(User currentUser){
         String expression = "SELECT * FROM users WHERE username=? AND password=?";
         String message = "";
-        User user = null;
+        User user = new User("","","");
 
         try {
             Class.forName("com.mysql.jdbc.Driver");

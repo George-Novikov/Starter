@@ -20,10 +20,12 @@
 		<td>Password:</td>
 		<td><input class="login-box" name="password"/></td>
 	</tr>
-	<tr>
-		<td>E-mail:</td>
-		<td><input class="login-box" name="email"/></td>
-	</tr>
+	<c:if test="${isRegistered == false}">
+		<tr>
+			<td>E-mail:</td>
+			<td><input class="login-box" name="email"/></td>
+		</tr>
+	</c:if>	
 	<tr>
 		<td></td>
 		<td><input id="login-button" class="login-box" type="submit"/></td>
