@@ -26,6 +26,7 @@ public class LoginServlet extends HttpServlet {
         }
         
         session.setAttribute("message", message);
+        session.setAttribute("isRegistered", isRegistered);
 
         ServletContext context = getServletContext();
         RequestDispatcher dispatcher = context.getRequestDispatcher("/login.jsp");
