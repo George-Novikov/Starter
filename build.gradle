@@ -36,14 +36,14 @@ sourceSets{
 
 dependencies {
     compileOnly('jakarta.servlet:jakarta.servlet-api:5.0.0')
+    compileOnly 'jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.1.1'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.0'
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-    compileOnly("javax.servlet:jstl:1.2")
-    providedCompile("javax.servlet.jsp.jstl:jstl-api:1.2")
-    providedCompile("javax.servlet.jsp:jsp-api:2.2")
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
     providedCompile("javax.servlet:javax.servlet-api:4.0.1")
-    providedCompile("org.apache.tomcat:tomcat-jsp-api:10.1.0-M16")
+    implementation 'org.apache.tomcat:tomcat-jsp-api:10.1.7'
     providedCompile("mysql:mysql-connector-java:8.0.32")
 }
 
